@@ -1,0 +1,154 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{booktabs}
+
+\geometry{margin=2.5cm}
+\setstretch{1.2}
+
+\title{\textbf{Especificación Formal del Sistema de Gestión de Componentes y Pedidos}}
+\author{ }
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Problema de Dominio}
+
+La empresa requiere un sistema que permita gestionar de manera integrada las operaciones relacionadas con la \textbf{compra, almacenamiento, venta y facturación} de componentes.  
+Actualmente, los procesos se llevan a cabo de forma manual o mediante hojas de cálculo, lo que provoca los siguientes problemas:
+
+\begin{itemize}
+    \item Dificultad para conocer el estado actual del inventario.
+    \item Errores frecuentes en los procesos de facturación y registro de pedidos.
+    \item Falta de trazabilidad entre pedidos, proveedores y facturas.
+    \item Duplicidad de información y pérdida de tiempo en la búsqueda de datos.
+\end{itemize}
+
+El objetivo es desarrollar un sistema de información que centralice los procesos de compra, venta y almacenamiento de componentes, permitiendo una gestión más eficiente, trazable y confiable.
+
+\section{Cuestión u Objetivo del Sistema}
+
+Diseñar e implementar un \textbf{Sistema de Gestión de Componentes y Pedidos} que integre los módulos de:
+\begin{itemize}
+    \item Proveedores
+    \item Inventario
+    \item Pedidos
+    \item Facturación
+    \item Clientes
+    \item Empleados y cargos
+\end{itemize}
+
+El sistema debe permitir registrar, consultar y mantener actualizada toda la información de los actores y entidades involucradas, garantizando la coherencia de los datos y la automatización de los procesos.
+
+\section{Requisitos Funcionales}
+
+\subsection{Módulo de Proveedores}
+\begin{enumerate}
+    \item Registrar nuevos proveedores con su información de contacto.
+    \item Consultar los datos de proveedores existentes.
+    \item Modificar información de un proveedor.
+    \item Eliminar proveedores sin dependencias activas.
+\end{enumerate}
+
+\subsection{Módulo de Componentes (Info\_Componentes)}
+\begin{enumerate}
+    \item Registrar nuevos componentes, con tipo, descripción, características y valor unitario de compra.
+    \item Consultar y listar componentes registrados.
+    \item Modificar los datos de un componente.
+    \item Eliminar componentes obsoletos o fuera de catálogo.
+\end{enumerate}
+
+\subsection{Módulo de Entrada de Almacén}
+\begin{enumerate}
+    \item Registrar entradas de componentes provenientes de proveedores.
+    \item Actualizar automáticamente el inventario al registrar una entrada.
+    \item Consultar el histórico de entradas al almacén.
+\end{enumerate}
+
+\subsection{Módulo de Inventario}
+\begin{enumerate}
+    \item Consultar el inventario general y el stock disponible.
+    \item Actualizar manualmente las existencias cuando sea necesario.
+    \item Calcular el valor total del inventario.
+\end{enumerate}
+
+\subsection{Módulo de Pedidos}
+\begin{enumerate}
+    \item Registrar nuevos pedidos realizados por clientes.
+    \item Asignar a cada pedido un empleado responsable.
+    \item Consultar, modificar o eliminar pedidos.
+    \item Registrar los detalles de cada pedido (componentes y cantidades solicitadas).
+\end{enumerate}
+
+\subsection{Módulo de Facturación}
+\begin{enumerate}
+    \item Generar facturas basadas en los pedidos aprobados.
+    \item Asociar cada factura a un cliente y un empleado responsable.
+    \item Registrar los detalles de la factura (componentes y cantidades vendidas).
+    \item Calcular el total de la factura.
+    \item Consultar, modificar y eliminar facturas.
+\end{enumerate}
+
+\subsection{Módulo de Clientes}
+\begin{enumerate}
+    \item Registrar, consultar, modificar y eliminar clientes.
+    \item Asociar cada cliente a una ciudad.
+\end{enumerate}
+
+\subsection{Módulo de Empleados y Cargos}
+\begin{enumerate}
+    \item Registrar empleados con su información personal.
+    \item Asignar a cada empleado un cargo y salario.
+    \item Consultar, modificar o eliminar empleados y cargos.
+\end{enumerate}
+
+\section{Requisitos de Información}
+
+El sistema debe almacenar y gestionar la siguiente información estructurada:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}p{4cm}p{10cm}@{}}
+\toprule
+\textbf{Entidad} & \textbf{Atributos Principales} \\ \midrule
+Proveedores & Código\_Proveedor, Nombre, Dirección, Teléfono, Nombre\_Contacto, Código\_Ciudad \\
+Info\_Componentes & Id, Código\_Comp, Tipo, Características, Descripción, Vlr\_Unitario\_Compra, Código\_Proveedor \\
+Entrada\_Almacén & Id, Fecha\_Entrada, Código\_Componente, Cantidad\_Comprada, Código\_Proveedor \\
+Inventario & Código\_Componente, Nombre\_Componente, Cantidad, Vlr\_Unitario\_Venta \\
+Pedidos & Id\_Pedido, Fecha\_Pedido, Nit\_Cliente, Estado\_Pedido, Id\_Empleado \\
+Detalle\_Pedido & Id\_Detalle, Id\_Pedido, Código\_Componente, Cantidad\_Solicitada \\
+Facturas & Id\_Factura, Fecha\_Factura, Nit\_Cliente, Estado\_Factura, Id\_Empleado \\
+Detalle\_Factura & Id\_Detalle, Id\_Factura, Código\_Componente, Cantidad\_Vendida \\
+Clientes & Nit\_Cliente, Nombre, Apellidos, Código\_Ciudad, Dirección, Teléfono \\
+Ciudades & Código\_Ciudad, Nombre, Departamento \\
+Empleados & Id\_Empleado, Nombre, Apellidos, Dirección, Teléfono, Código\_Cargo \\
+Cargos & Código\_Cargo, Nombre\_Cargo, Salario \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\section{Reglas del Negocio}
+
+\begin{enumerate}
+    \item Un proveedor puede proveer varios componentes, pero cada componente pertenece a un solo proveedor.
+    \item Un pedido puede incluir varios componentes.
+    \item Cada pedido está asociado a un cliente y a un empleado.
+    \item Cada factura se genera a partir de un pedido y puede contener varios componentes vendidos.
+    \item La cantidad vendida no puede superar el stock disponible en inventario.
+    \item La eliminación de entidades depende de la inexistencia de dependencias activas (por ejemplo, no se puede eliminar un cliente con pedidos pendientes).
+\end{enumerate}
+
+\section{Conclusión}
+
+La especificación presentada define los requerimientos funcionales, de información y las reglas del negocio necesarias para el diseño de un sistema de gestión integral que automatice los procesos de compra, venta, inventario y facturación, garantizando coherencia, trazabilidad y eficiencia en las operaciones.
+
+\end{document}
