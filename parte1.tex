@@ -1,0 +1,263 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\geometry{margin=2.5cm}
+\setstretch{1.2}
+
+\titleformat{\section}{\Large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{0.5em}{}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\scshape\LARGE Universidad Politécnica de Valencia\par}
+    \vspace{1cm}
+    {\scshape\Large Planificaicón Proyecto de Tecnologías de Base de Datos \par}
+    \vspace{1.5cm}
+    {\huge\bfseries Sistema de Gestión de Inventario, Pedidos y Facturación \par}
+    \vspace{2cm}
+    {\Large Equipo de trabajo:\\ Daniel Jiménez García \\ Sergio Múñoz Gómez \\ Daniel Jiménez García\par}
+    \vspace{0.3cm}
+    \vfill
+    {\large Fecha: \today\par}
+\end{titlepage}
+
+\section{Descripción general del sistema de información}
+
+El sistema de información está diseñado para gestionar el aprovisionamiento y ventas de una empresa dedicada al manejo de componentes en un almacén. 
+Este sistema permite controlar el inventario, registrar las entradas de productos provenientes de proveedores, gestionar los pedidos de los clientes, generar facturas y mantener un registro del personal involucrado en cada proceso.
+
+\subsection*{Objetivos principales}
+\begin{itemize}
+    \item Controlar el stock de los componentes disponibles.
+    \item Registrar y gestionar entradas de mercancías desde los proveedores.
+    \item Administrar los pedidos de clientes y su relación con las facturas generadas.
+    \item Mantener la trazabilidad entre proveedores, empleados, clientes y componentes.
+    \item Automatizar la facturación y el seguimiento de los pedidos.
+\end{itemize}
+
+\section{Descripción de los objetos de información y su estructura}
+
+\subsection{Componentes}
+Representa cada tipo de componente disponible en el sistema.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Componente (PK)
+    \item Tipo\_Componente
+    \item Descripción
+\end{itemize}
+
+\textbf{Relaciones:} un componente puede estar vinculado a varios registros de Inventario y Entradas de Almacén.
+
+\subsection{Inventario}
+Representa el stock actual de componentes en el almacén.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Inventario (PK)
+    \item Id\_Componente (FK)
+    \item Nombre
+    \item Cantidad
+\end{itemize}
+
+\textbf{Relaciones:} 
+\begin{itemize}
+    \item 1:N con Componentes
+    \item 1:N con Pedidos
+\end{itemize}
+
+\subsection{Entrada de Almacén}
+Registra las entradas de productos al almacén desde los proveedores.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Almacén (PK)
+    \item Fecha\_Entrada
+    \item Id\_Componente (FK)
+    \item Cantidad
+    \item Id\_Proveedor (FK)
+\end{itemize}
+
+\textbf{Relaciones:} 
+\begin{itemize}
+    \item N:1 con Proveedores
+    \item N:1 con Componentes
+\end{itemize}
+
+\subsection{Proveedores}
+Representa las empresas proveedoras de componentes.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Proveedor (PK)
+    \item Nombre\_Proveedor
+    \item Código\_Ciudad
+    \item Dirección
+\end{itemize}
+
+\textbf{Relaciones:} 1:N con Entradas de Almacén.
+
+\subsection{Pedido}
+Representa las solicitudes de productos realizadas por los clientes.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Pedido (PK)
+    \item Fecha\_Pedido
+    \item Estado\_Pedido
+    \item Id\_Empleado (FK)
+    \item Id\_Inventario (FK)
+\end{itemize}
+
+\textbf{Relaciones:}
+\begin{itemize}
+    \item N:1 con Cliente
+    \item N:1 con Empleado
+    \item N:1 con Inventario
+\end{itemize}
+
+\subsection{Cliente}
+Representa a los clientes que realizan pedidos.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Cliente (PK)
+    \item Nombre
+    \item Código\_Ciudad
+    \item Dirección
+    \item Teléfono
+\end{itemize}
+
+\textbf{Relaciones:} 
+\begin{itemize}
+    \item 1:N con Pedidos
+    \item 1:N con Facturas
+\end{itemize}
+
+\subsection{Factura}
+Registra la venta de productos a los clientes.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Factura (PK)
+    \item Fecha\_Factura
+    \item Estado\_Factura
+    \item Id\_Empleado (FK)
+\end{itemize}
+
+\textbf{Relaciones:}
+\begin{itemize}
+    \item 1:N con Cliente
+    \item N:1 con Empleado
+\end{itemize}
+
+\subsection{Empleados}
+Representa al personal de la empresa.
+
+\textbf{Atributos:}
+\begin{itemize}
+    \item Id\_Empleado (PK)
+    \item Apellidos
+    \item Nombre
+    \item Dirección
+    \item Teléfono
+\end{itemize}
+
+\textbf{Relaciones:}
+\begin{itemize}
+    \item 1:N con Pedidos
+    \item 1:N con Facturas
+\end{itemize}
+
+\section{Procesos funcionales principales}
+
+\subsection{Gestión de inventario}
+\begin{itemize}
+    \item Alta, modificación y eliminación de componentes.
+    \item Control de existencias y actualización tras entradas o ventas.
+\end{itemize}
+
+\subsection{Gestión de proveedores y entradas}
+\begin{itemize}
+    \item Registro de nuevos proveedores.
+    \item Registro de entradas de productos al almacén.
+    \item Actualización automática del inventario tras cada entrada.
+\end{itemize}
+
+\subsection{Gestión de pedidos de clientes}
+\begin{itemize}
+    \item Creación y seguimiento de pedidos.
+    \item Asignación de empleados responsables.
+    \item Actualización del estado del pedido.
+\end{itemize}
+
+\subsection{Facturación}
+\begin{itemize}
+    \item Generación de facturas a partir de pedidos.
+    \item Registro de la fecha, estado y empleado responsable.
+    \item Asociación de la factura con el cliente correspondiente.
+\end{itemize}
+
+\subsection{Gestión de empleados}
+\begin{itemize}
+    \item Control del personal y sus tareas.
+    \item Registro de los pedidos y facturas gestionadas.
+\end{itemize}
+
+\section{Borrador del diagrama de clases UML}
+
+A continuación, se presenta el borrador del diagrama de clases UML basado en las entidades descritas. 
+Este diagrama muestra las clases principales, sus atributos y relaciones cardinales.
+
+\vspace{0.5cm}
+
+\textbf{Clases principales:}
+\begin{itemize}
+    \item \textbf{Componente}: Id\_Componente, Tipo\_Componente, Descripción.
+    \item \textbf{Inventario}: Id\_Inventario, Nombre, Cantidad.
+    \item \textbf{EntradaAlmacén}: Id\_Almacén, Fecha\_Entrada, Cantidad.
+    \item \textbf{Proveedor}: Id\_Proveedor, Nombre\_Proveedor, Dirección.
+    \item \textbf{Pedido}: Id\_Pedido, Fecha\_Pedido, Estado\_Pedido.
+    \item \textbf{Cliente}: Id\_Cliente, Nombre, Dirección, Teléfono.
+    \item \textbf{Factura}: Id\_Factura, Fecha\_Factura, Estado\_Factura.
+    \item \textbf{Empleado}: Id\_Empleado, Nombre, Apellidos, Teléfono.
+\end{itemize}
+
+\vspace{0.5cm}
+
+En la imagen \ref{diagrama_clases} se puede ver el diagrama de clases inicial propuesto para este problema.
+
+\begin{figure}
+\includegraphics[scale=0.3]{diagrama_clases.png}
+\label{diagrama_clases}
+\caption{Digrama de clases inicial}
+\end{figure} 
+
+\section{Planifición}
+
+Por último, hemos creado un digrama de Gantt para separar las tareas a realizar entre los miembros del equipo, que se puede ver en la imagen \ref{gantt}
+
+\begin{figure}
+\includegraphics[scale=0.3]{gantt.png}
+\label{gantt}
+\caption{Digrama de Gantt}
+\end{figure} 
+
+\section{Firmas}
+\vspace{2cm}
+\begin{center}
+\begin{tabular}{ccc}
+\rule{5cm}{0.4pt} & \rule{5cm}{0.4pt} & \rule{5cm}{0.4pt} \\
+Daniel & Sergio & Ángela \\
+\end{tabular}
+\end{center}
+
+\end{document}
